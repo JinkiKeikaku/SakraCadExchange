@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SakraCadExchange", "SakraCadExchange\SakraCadExchange.csproj", "{365DF96C-7358-45AA-B846-5458DA926879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SakraCadHelper", "SakraCadHelper\SakraCadHelper.csproj", "{5F368FF8-C032-4B87-A135-282B483C81B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{365DF96C-7358-45AA-B846-5458DA926879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365DF96C-7358-45AA-B846-5458DA926879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365DF96C-7358-45AA-B846-5458DA926879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365DF96C-7358-45AA-B846-5458DA926879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F368FF8-C032-4B87-A135-282B483C81B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F368FF8-C032-4B87-A135-282B483C81B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F368FF8-C032-4B87-A135-282B483C81B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F368FF8-C032-4B87-A135-282B483C81B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DDAF3626-2168-42F8-BD33-8A21B21064DD}
+	EndGlobalSection
+EndGlobal
