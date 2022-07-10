@@ -45,11 +45,11 @@ namespace SakraCadHelper
                 {
                     w.WriteString("NAME", ls.Key, true);
                     w.NewLine();
-                    w.WriteObjects("SHAPES", ls.Value, (w, s) =>
-                    {
-                        SkcShapeManager.WriteShape(w, s);
-                    }, true);
-
+                    SkcShapeManager.WriteShapes(w, "SHAPES", ls.Value);
+                    //w.WriteObjects("SHAPES", ls.Value, (w, s) =>
+                    //{
+                    //    SkcShapeManager.WriteShape(w, s);
+                    //}, true);
                 }, false);
             }, true);
 //            w.WriteLine($"NAME(\"{Name}\")FLAG({Flag})");

@@ -24,6 +24,31 @@ namespace SakraCadHelper.Shape
             //w.WriteLine($")");
         }
 
+        public static void ReadShapes(SkcReader reader, List<SkcShape> shapes)
+        {
+            reader.ReadTags(new(), (reader, tag) =>
+            {
+                var s = SkcShapeManager.Create(tag);
+                if (s == null)
+                {
+                    reader.SkipTag();
+                }
+                else
+                {
+                    s.Read(reader);
+                    shapes.Add(s);
+                }
+            });
+        }
+
+        public static void WriteShapes(SkcWriter w, string tag, IEnumerable<SkcShape> shapes)
+        {
+            w.WriteObjects(tag, shapes, (w, s) =>
+            {
+                WriteShape(w, s);
+            }, true);
+        }
+
         static SkcShape[] Shapes = new SkcShape[]
         {
             new SkcLineShape(),
@@ -34,6 +59,15 @@ namespace SakraCadHelper.Shape
             new SkcTextShape(),
             new SkcMultiTextShape(),
             new SkcSizeShape(),
+            new SkcRadiusShape(),
+            new SkcDiameterShape(),
+            new SkcAngleShape(),
+            new SkcLabelShape(),
+            new SkcBalloonShape(),
+            new SkcMarkShape(),
+            new SkcGroupShape(),
+            new SkcBitmapShape(),
+            new SkcOleShape(),
         };
     }
 }

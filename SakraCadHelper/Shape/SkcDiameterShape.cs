@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace SakraCadHelper.Shape
 {
-    public class SkcSizeShape : SkcShape
+    public class SkcDiameterShape : SkcShape
     {
         public SkcPoint P0 = new();
-        public SkcPoint P1 = new();
-        public SkcPoint V0 = new(0, 1);
-        public double Leg0 = 0;
-        public double Leg1 = 0;
+        public double Radius;
+        public double Angle = 0.0;
         public double TextPos = 0.5;
         public int Flag = 0;
         public string Text = "";
@@ -23,11 +21,11 @@ namespace SakraCadHelper.Shape
         public int TextColor = 0;
         public int TextStyle = 0;
         public SkcFaceColor? FaceColor = null;
-        public SkcSizeStyle SizeStyle = new();
+        public SkcDiameterStyle DiameterStyle = new();
         public SkcFormatStyle FormatStyle = new();
 
-        public override string Name => "SIZE";
-        public override SkcShape Create() => new SkcSizeShape();
+        public override string Name => "DIAMETER";
+        public override SkcShape Create() => new SkcDiameterShape();
 
         public override void Read(SkcReader reader)
         {
@@ -37,10 +35,8 @@ namespace SakraCadHelper.Shape
                     reader.ReadTags(new()
                     {
                         { "P0", (reader)=> P0 = reader.ReadPoint()},
-                        { "P1", (reader)=> P1 = reader.ReadPoint()},
-                        { "V0", (reader)=> V0 = reader.ReadPoint()},
-                        { "LEG0", (reader)=> Leg0 = reader.ReadDouble()},
-                        { "LEG1", (reader)=> Leg1 = reader.ReadDouble()},
+                        { "RADIUS", (reader)=> Radius = reader.ReadDouble()},
+                        { "ANGLE", (reader)=> Angle = reader.ReadDouble()},
                         { "TEXTPOS", (reader)=> TextPos = reader.ReadDouble()},
                         { "FLAG", (reader)=> Flag = reader.ReadInt()},
                     })
@@ -54,7 +50,7 @@ namespace SakraCadHelper.Shape
                         { "FC", (reader)=> FaceColor = ReadFaceColor(reader)},
                         { "TC", (reader)=> TextColor = reader.ReadInt()},
                         { "TS", (reader)=> TextStyle = reader.ReadInt()},
-                        { "SIZESTYLE", (reader)=> SizeStyle.Read(reader)},
+                        { "DIAMETERSTYLE", (reader)=> DiameterStyle.Read(reader)},
                         { "FORMATSTYLE", (reader)=> FormatStyle.Read(reader)},
                     })
                 },
@@ -71,10 +67,8 @@ namespace SakraCadHelper.Shape
             w.WriteObject("PARAM", false, w =>
             {
                 w.Write("P0", P0);
-                w.Write("P1", P1);
-                w.Write("V0", V0);
-                w.Write("LEG0", Leg0);
-                w.Write("LEG1", Leg1);
+                w.Write("RADIUS", Radius);
+                w.Write("ANGLE", Angle, 0.0);
                 w.Write("TEXTPOS", TextPos, 0.5);
                 w.Write("FLAG", Flag, 0);
             });
@@ -86,7 +80,7 @@ namespace SakraCadHelper.Shape
                 WriteFaceColor(w, "FC", FaceColor);
                 w.Write("TC", TextColor);
                 w.Write("TS", TextStyle, 0);
-                w.WriteObject("SIZESTYLE", false, w => SizeStyle.Write(w));
+                w.WriteObject("DIAMETERSTYLE", false, w => DiameterStyle.Write(w));
                 w.WriteObject("FORMATSTYLE", false, w => FormatStyle.Write(w));
             });
             w.NewLine();
@@ -94,17 +88,12 @@ namespace SakraCadHelper.Shape
         }
     }
 
-
-    public class SkcSizeStyle
+    public class SkcDiameterStyle
     {
-        public double LineGap = 3.0;
         public double LineJut = 10.0;
-        public double LineDrop = 3.0;
         public double TextGap = 0.0;
-
         public string FontName = "";
-        public double FontHeight = 3.0;        ////ﾌｫﾝﾄの高さ(Paper座標 [mm])
-
+        public double FontHeight = 3.0;
         public SkcArrowAttribute StartArrow = new();
         public SkcArrowAttribute EndArrow = new();
 
@@ -112,9 +101,7 @@ namespace SakraCadHelper.Shape
         {
             reader.ReadTags(new()
             {
-                { "LINEGAP", (reader)=> LineGap = reader.ReadDouble()},
                 { "LINEJUT", (reader)=> LineJut = reader.ReadDouble()},
-                { "LINEDROP", (reader)=> LineDrop = reader.ReadDouble()},
                 { "TEXTGAP", (reader)=> TextGap = reader.ReadDouble()},
                 { "FONTNAME", (reader)=> FontName = reader.ReadString()},
                 { "FONTHEIGHT", (reader)=> FontHeight = reader.ReadDouble()},
@@ -122,17 +109,15 @@ namespace SakraCadHelper.Shape
                 { "EA",  (reader)=> EndArrow.Read(reader)},
            });
         }
+
         public void Write(SkcWriter w)
         {
-            w.Write("LINEGAP", LineGap);
             w.Write("LINEJUT", LineJut);
-            w.Write("LINEDROP", LineDrop);
             w.Write("TEXTGAP", TextGap);
             w.WriteString("FONTNAME", FontName);
             w.Write("FONTHEIGHT", FontHeight);
             SkcShape.WriteArrow(w, "SA", StartArrow);
             SkcShape.WriteArrow(w, "EA", EndArrow);
         }
-
     }
 }

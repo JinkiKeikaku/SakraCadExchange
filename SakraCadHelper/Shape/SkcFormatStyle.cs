@@ -10,6 +10,8 @@ namespace SakraCadHelper.Shape
     {
         public double Round;
         public int Flag;
+        public string Header = "";
+        public string Footer = "";
 
         public void Read(SkcReader reader)
         {
@@ -17,12 +19,16 @@ namespace SakraCadHelper.Shape
             {
                 { "ROUND", (reader)=> Round = reader.ReadDouble()},
                 { "FLAG", (reader)=> Flag = reader.ReadInt()},
+                { "HEADER", (reader)=> Header = reader.ReadString()},
+                { "FOOTER", (reader)=> Footer = reader.ReadString()},
            });
         }
         public void Write(SkcWriter w)
         {
-                w.Write("ROUND", Round);
-                w.Write("FLAG", Flag);
+            w.Write("ROUND", Round);
+            w.Write("FLAG", Flag);
+            if (Header != "") w.WriteString("HEADER", Header);
+            if (Footer != "") w.WriteString("FOOTER", Footer);
         }
     }
 }

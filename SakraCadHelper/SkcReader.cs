@@ -1,4 +1,5 @@
 ﻿using SakraCadHelper.Shape;
+using System.IO.Compression;
 using System.Text;
 
 namespace SakraCadHelper
@@ -164,6 +165,69 @@ namespace SakraCadHelper
         {
             var tok = mTokenizer.GetNextToken();
             if (tok.Kind != SkcTokenizer.TokenKind.Comma) throw new Exception($"ReadPoint::token is not Comma : {tok}");
+        }
+
+        public byte[] ReadBytes()
+        {
+            var tok = mTokenizer.GetNextToken();
+            if (tok.Kind != SkcTokenizer.TokenKind.Number) throw new Exception($"ReadBytes::token is not Number(1st) : {tok}");
+            var size = tok.GetInt();
+            tok = mTokenizer.GetNextToken();
+            if (tok.Kind != SkcTokenizer.TokenKind.Comma) throw new Exception($"ReadBytes::token is not Comma : {tok}");
+            var sb = new StringBuilder();
+            while (true)
+            {
+                tok = mTokenizer.GetNextToken();
+                if(tok.Kind != SkcTokenizer.TokenKind.String)
+                {
+                    mTokenizer.PushToken(tok);
+                    break;
+                }
+                sb.Append(tok.GetString());
+                tok = mTokenizer.GetNextToken();
+                if (tok.Kind != SkcTokenizer.TokenKind.Comma)
+                {
+                    mTokenizer.PushToken(tok);
+                    break;
+                }
+            }
+            return Convert.FromBase64String(sb.ToString());
+        }
+        public byte[] ReadCompressBytes()
+        {
+            var tok = mTokenizer.GetNextToken();
+            if (tok.Kind != SkcTokenizer.TokenKind.Number) throw new Exception($"ReadBytes::token is not Number(1st) : {tok}");
+            var size = tok.GetInt();
+            tok = mTokenizer.GetNextToken();
+            if (tok.Kind != SkcTokenizer.TokenKind.Comma) throw new Exception($"ReadBytes::token is not Comma : {tok}");
+            tok = mTokenizer.GetNextToken();
+            if (tok.Kind != SkcTokenizer.TokenKind.String || tok.GetString() != "ZLIB") throw new Exception($"ReadBytes::token is not \"ZLIB\" : {tok}");
+            tok = mTokenizer.GetNextToken();
+            if (tok.Kind != SkcTokenizer.TokenKind.Comma) throw new Exception($"ReadBytes::token is not Comma : {tok}");
+            var sb = new StringBuilder();
+            while (true)
+            {
+                tok = mTokenizer.GetNextToken();
+                if (tok.Kind != SkcTokenizer.TokenKind.String)
+                {
+                    mTokenizer.PushToken(tok);
+                    break;
+                }
+                sb.Append(tok.GetString());
+                tok = mTokenizer.GetNextToken();
+                if (tok.Kind != SkcTokenizer.TokenKind.Comma)
+                {
+                    mTokenizer.PushToken(tok);
+                    break;
+                }
+            }
+            var m = Convert.FromBase64String(sb.ToString());
+            using var bs = new MemoryStream(m);
+            using var ds = new ZLibStream(bs, CompressionMode.Decompress);
+            var buf = new byte[size];
+            ds.Read(buf, 0, size);
+            ds.Close();
+            return buf;
         }
     }
 }

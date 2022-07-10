@@ -173,28 +173,11 @@ namespace SakraCadHelper
                     reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
                     {
                         { "NAME", (reader)=> name = reader.ReadString() },
-                        { "SHAPES", (reader)=> ReadShapes(reader, shapes) },
+                        { "SHAPES", (reader)=> SkcShapeManager.ReadShapes(reader, shapes) },
                     });
                     sheet.AddRange(name, shapes);
                 }}
             }); ;
-        }
-
-        void ReadShapes(SkcReader reader, List<SkcShape> shapes)
-        {
-            reader.ReadTags(new Dictionary<string, Action<SkcReader>>(), (reader, tag) =>
-            {
-                var s = SkcShapeManager.Create(tag);
-                if (s == null)
-                {
-                    reader.SkipTag();
-                }
-                else
-                {
-                    s.Read(reader);
-                    shapes.Add(s);
-                }
-            });
         }
 
         void ReadPaperScale(SkcReader reader, SkcSheet sheet)
