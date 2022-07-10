@@ -13,10 +13,10 @@ namespace SakraCadHelper.Shape
         public double Height = 20.0;
         public SkcDib Dib = new ();
 
-        public override string Name => "BITMAP";
-        public override SkcShape Create() => new SkcBitmapShape();
+        internal override string Name => "BITMAP";
+        internal override SkcShape Create() => new SkcBitmapShape();
 
-        public override void Read(SkcReader reader)
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -32,7 +32,7 @@ namespace SakraCadHelper.Shape
             }); 
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -63,7 +63,7 @@ namespace SakraCadHelper.Shape
             Image = image;
         }
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -71,7 +71,7 @@ namespace SakraCadHelper.Shape
                 { "IMAGE", (reader)=> Image = reader.ReadCompressBytes() },
             }); ;
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             if (Header == null) throw new Exception("SkcDib::Write() Haeder is null.");
             if (Image == null) throw new Exception("SkcDib::Write() Image is null.");

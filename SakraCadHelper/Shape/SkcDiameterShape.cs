@@ -24,10 +24,9 @@ namespace SakraCadHelper.Shape
         public SkcDiameterStyle DiameterStyle = new();
         public SkcFormatStyle FormatStyle = new();
 
-        public override string Name => "DIAMETER";
-        public override SkcShape Create() => new SkcDiameterShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "DIAMETER";
+        internal override SkcShape Create() => new SkcDiameterShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -62,7 +61,7 @@ namespace SakraCadHelper.Shape
             }); ;
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -97,7 +96,7 @@ namespace SakraCadHelper.Shape
         public SkcArrowAttribute StartArrow = new();
         public SkcArrowAttribute EndArrow = new();
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -110,7 +109,7 @@ namespace SakraCadHelper.Shape
            });
         }
 
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.Write("LINEJUT", LineJut);
             w.Write("TEXTGAP", TextGap);

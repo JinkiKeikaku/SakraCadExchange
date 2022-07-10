@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SakraCadHelper
 {
-    public class SkcWriter
+    internal class SkcWriter
     {
         TextWriter mWriter;
         int mIndent = 0;

@@ -22,10 +22,9 @@ namespace SakraCadHelper.Shape
         public double TextAngle = 0.0;
         public SkcBalloonStyle BalloonStyle = new();
 
-        public override string Name => "BALLOON";
-        public override SkcShape Create() => new SkcBalloonShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "BALLOON";
+        internal override SkcShape Create() => new SkcBalloonShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -58,7 +57,7 @@ namespace SakraCadHelper.Shape
             }); ;
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -88,7 +87,7 @@ namespace SakraCadHelper.Shape
         public double FontHeight = 3.0;        ////ﾌｫﾝﾄの高さ(Paper座標 [mm])
         public SkcArrowAttribute Arrow = new();
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -97,7 +96,7 @@ namespace SakraCadHelper.Shape
                 { "ARROW",  (reader)=> Arrow.Read(reader)},
            });
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.WriteString("FONTNAME", FontName);
             w.Write("FONTHEIGHT", FontHeight);

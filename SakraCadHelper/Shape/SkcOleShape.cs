@@ -12,11 +12,9 @@ namespace SakraCadHelper.Shape
         public double Width;
         public double Height;
         public SkcOle2Item Ole2Item = new();
-
-        public override string Name => "OLE";
-        public override SkcShape Create() => new SkcOleShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "OLE";
+        internal override SkcShape Create() => new SkcOleShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -32,7 +30,7 @@ namespace SakraCadHelper.Shape
             });
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -60,14 +58,14 @@ namespace SakraCadHelper.Shape
             Data = data;
         }
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
                 { "OBJECT", (reader)=> Data = reader.ReadCompressBytes() },
             }); ;
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             if (Data == null) throw new Exception("SkcOle2Item::Write() Data is null.");
             w.WriteCompressBytes("OBJECT", Data);

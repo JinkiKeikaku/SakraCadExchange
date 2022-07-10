@@ -31,7 +31,7 @@ namespace SakraCadHelper.Shape
         public SkcPoint P0 =new();
         public MidColor? Mid = null;
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -48,7 +48,7 @@ namespace SakraCadHelper.Shape
                 } },
             });
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.Write("TYPE", ID);
             w.Write("SC", SC);
@@ -86,7 +86,7 @@ namespace SakraCadHelper.Shape
 
         public int ID = ARROWSTYLE_NONE;
         public double Size = 0.0;
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new ()
             {

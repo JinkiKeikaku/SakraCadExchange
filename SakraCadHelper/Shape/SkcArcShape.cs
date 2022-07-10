@@ -23,10 +23,9 @@ namespace SakraCadHelper.Shape
         public SkcArrowAttribute EndArrow = new();
         public SkcFaceColor? FaceColor = null;
 
-        public override string Name => "ARC";
-        public override SkcShape Create() => new SkcArcShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "ARC";
+        internal override SkcShape Create() => new SkcArcShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -56,7 +55,7 @@ namespace SakraCadHelper.Shape
             });
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -77,22 +76,6 @@ namespace SakraCadHelper.Shape
                 WriteArrow(w, "SA", StartArrow);
                 WriteArrow(w, "EA", EndArrow);
             });
-            //w.Write($"PARAM(P0({P0})RADIUS({Radius})");
-            //if (Flat != 1.0) w.Write($"FLAT({Flat})");
-            //if (Angle != 0.0) w.Write($"ANGLE({Angle})");
-            //if (Flag != 0) w.Write($"Flag({Flag})");
-            //w.Write($"START({Start})");
-            //w.Write($"END({End})");
-            //w.Write($")");
-
-            //w.Write($"ATTR(");
-            //WriteLineColor(w, "LC", LineColor);
-            //WriteLineWidth(w, "LW", LineWidth);
-            //WriteLineStyle(w, "LS", LineStyle);
-            //WriteArrow(w, "SA", StartArrow);
-            //WriteArrow(w, "EA", EndArrow);
-            //WriteFaceColor(w, "FC", FaceColor);
-            //w.Write($")");
         }
 
     }

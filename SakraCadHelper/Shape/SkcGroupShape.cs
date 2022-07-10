@@ -10,9 +10,9 @@ namespace SakraCadHelper.Shape
     {
         public SkcPoint P0 = new();
         public List<SkcShape> Shapes = new();
-        public override string Name => "GROUP";
-        public override SkcShape Create() => new SkcGroupShape();
-        public override void Read(SkcReader reader)
+        internal override string Name => "GROUP";
+        internal override SkcShape Create() => new SkcGroupShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -25,7 +25,7 @@ namespace SakraCadHelper.Shape
                 { "SHAPES", (reader)=>SkcShapeManager.ReadShapes(reader, Shapes) },
             });
         }
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {

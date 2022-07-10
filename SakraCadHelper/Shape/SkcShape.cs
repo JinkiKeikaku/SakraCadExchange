@@ -8,13 +8,12 @@ namespace SakraCadHelper.Shape
 {
     public abstract class SkcShape
     {
-        public abstract string Name { get; }
+        internal abstract string Name { get; }
+        internal abstract SkcShape Create();
+        internal abstract void Read(SkcReader reader);
+        internal abstract void Write(SkcWriter w);
 
-        public abstract SkcShape Create();
-        public abstract void Read(SkcReader reader);
-        public abstract void Write(SkcWriter w);
-
-        public static SkcFaceColor? ReadFaceColor(SkcReader reader)
+        internal static SkcFaceColor? ReadFaceColor(SkcReader reader)
         {
             SkcFaceColor? fc = null;
             if (reader.ReadTag("SOLID", (reader) =>
@@ -30,7 +29,7 @@ namespace SakraCadHelper.Shape
             });
             return fc;
         }
-        public static void WriteFaceColor(SkcWriter w, SkcFaceColor fc)
+        internal static void WriteFaceColor(SkcWriter w, SkcFaceColor fc)
         {
             if (fc is SkcSolidColor solid)
             {
@@ -44,12 +43,10 @@ namespace SakraCadHelper.Shape
                 {
                     grad.Write(w);
                 });
-                //w.Write($"GRAD(");
-                //w.Write($")");
             }
         }
 
-        public static void WriteFaceColor(SkcWriter w, string tag, SkcFaceColor? fc)
+        internal static void WriteFaceColor(SkcWriter w, string tag, SkcFaceColor? fc)
         {
             if (fc != null)
             {
@@ -57,37 +54,31 @@ namespace SakraCadHelper.Shape
                 {
                     WriteFaceColor(w, fc);
                 });
-                //w.Write($"{tag}(");
-                //w.Write($")");
             }
         }
 
-        public static void WriteArrow(SkcWriter w, string tag, SkcArrowAttribute arrow)
+        internal static void WriteArrow(SkcWriter w, string tag, SkcArrowAttribute arrow)
         {
             if (arrow.ID != 0)
             {
-                w.Write<SkcArrowAttribute>(tag, arrow);
-//                w.Write($"{tag}({arrow})");
+                w.Write(tag, arrow);
             }
         }
 
-        public static void WriteLineColor(SkcWriter w, string tag, int color)
+        internal static void WriteLineColor(SkcWriter w, string tag, int color)
         {
-            w.Write<int>(tag, color);
-//            w.Write($"{tag}({color})");
+            w.Write(tag, color);
         }
 
-        public static void WriteLineWidth(SkcWriter w, string tag, double width)
+        internal static void WriteLineWidth(SkcWriter w, string tag, double width)
         {
-            w.Write<double>(tag, width, 0.0);
-//            if (width != 0.0) w.Write($"{tag}({width})");
+            w.Write(tag, width, 0.0);
         }
-        public static void WriteLineStyle(SkcWriter w, string tag, int style)
+        internal static void WriteLineStyle(SkcWriter w, string tag, int style)
         {
-            w.Write<int>(tag, style, 0);
-//            if (style != 0) w.Write($"{tag}({style})");
+            w.Write(tag, style, 0);
         }
-        public static void ReadVertex(SkcReader reader, List<SkcPoint> vertex)
+        internal static void ReadVertex(SkcReader reader, List<SkcPoint> vertex)
         {
             reader.ReadTags(new()
             {
@@ -95,27 +86,13 @@ namespace SakraCadHelper.Shape
             });
         }
 
-        public static void WriteVertex(SkcWriter w, string tag, IReadOnlyList<SkcPoint> vertex)
+        internal static void WriteVertex(SkcWriter w, string tag, IReadOnlyList<SkcPoint> vertex)
         {
-            w.WriteObjects<SkcPoint>(tag, vertex, (w, p) =>
+            w.WriteObjects(tag, vertex, (w, p) =>
             {
-                w.Write<SkcPoint>("V", p);
-//                w.WriteLine($"V({v})");
+                w.Write("V", p);
             }, true);
-            //w.WriteLine($"{tag}(");
-            //foreach(var v in vertex)
-            //{
-            //    w.WriteLine($"V({v})");
-            //}
-            //w.WriteLine($")");
         }
-
-        //public static void WriteString(TextWriter w, string tag, string text)
-        //{
-        //    var s = text.Replace("\"", "\"\"");
-        //    w.Write($"{tag}(\"{s}\")");
-        //}
-
 
     }
 }

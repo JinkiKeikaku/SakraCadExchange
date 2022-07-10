@@ -18,10 +18,9 @@ namespace SakraCadHelper.Shape
         public SkcArrowAttribute EndArrow = new();
         public SkcFaceColor? FaceColor = null;
 
-        public override string Name => "SPLINE";
-        public override SkcShape Create() => new SkcSplineShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "SPLINE";
+        internal override SkcShape Create() => new SkcSplineShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -45,7 +44,7 @@ namespace SakraCadHelper.Shape
                 },
             });
         }
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {

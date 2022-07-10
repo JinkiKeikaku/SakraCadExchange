@@ -17,10 +17,9 @@ namespace SakraCadHelper.Shape
         public int LineStyle = 0;
         public SkcMarkStyle MarkStyle = new();
 
-        public override string Name => "MARK";
-        public override SkcShape Create() => new SkcMarkShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "MARK";
+        internal override SkcShape Create() => new SkcMarkShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -43,7 +42,7 @@ namespace SakraCadHelper.Shape
             }); ;
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -74,7 +73,7 @@ namespace SakraCadHelper.Shape
         public int Code = 0;
         public double Radius = 1.0;
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -82,7 +81,7 @@ namespace SakraCadHelper.Shape
                 { "RADIUS", (reader)=> Radius = reader.ReadDouble()},
            });
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.Write("CODE", Code, 0);
             w.Write("RADIUS", Radius, 1.0);

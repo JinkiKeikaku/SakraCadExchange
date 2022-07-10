@@ -18,16 +18,16 @@ namespace SakraCadHelper
         public List<SkcLayer> Layers { get; } = new();
         public List<SkcSheet> Sheets { get; } = new();
 
-        public void Write(SkcWriter w) 
+        internal void Write(SkcWriter w) 
         {
             w.WriteString("NAME", Name);
-            w.Write<int>("FLAG", Flag, true);
+            w.Write("FLAG", Flag, true);
             w.WriteObject("LASTUSED", false, w =>
             {
                 w.WriteString("SHEET", LastUsedSheet);
                 w.WriteString("LAYER", LastUsedLayer);
             }, true);
-            w.WriteObjects<SkcLayer>("LAYERS", Layers, (w, layer) =>
+            w.WriteObjects("LAYERS", Layers, (w, layer) =>
             {
                 w.WriteObject("LAYER", false, w =>
                 {
@@ -35,7 +35,7 @@ namespace SakraCadHelper
                     w.Write<int>("FLAG", layer.Flag);
                 });
             }, true);
-            w.WriteObjects<SkcSheet>("SHEETS", Sheets, (w, sheet) =>
+            w.WriteObjects("SHEETS", Sheets, (w, sheet) =>
             {
                 w.WriteObject("SHEET", true, w =>
                 {
@@ -43,28 +43,6 @@ namespace SakraCadHelper
                 }, false);
 
             }, true);
-
-
-                //            w.WriteLine($"NAME(\"{Name}\")FLAG({Flag})");
-                //            w.WriteLine($"LASTUSED(SHEET(\"{LastUsedSheet}\")LAYER(\"{LastUsedLayer}\"))");
-                //w.WriteLine($"LAYERS(");
-                //foreach(var layer in Layers)
-                //{
-                //    w.Write("LAYER(");
-                //    w.Write(layer.ToString());
-                //    w.WriteLine(")");
-                //}
-                //w.WriteLine($")");
-            //    w.WriteLine($"SHEETS(");
-            //foreach (var sheet in Sheets)
-            //{
-            //    w.WriteLine($"SHEET(");
-            //    sheet.Write(w);
-            //    w.WriteLine($")");
-            //}
-            //w.WriteLine($")");
         }
     }
-
-
 }

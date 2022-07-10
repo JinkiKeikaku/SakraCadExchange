@@ -17,10 +17,9 @@ namespace SakraCadHelper.Shape
         public SkcFaceColor? FaceColor = null;
         public SkcTextAttribute TextAttribute = new();
 
-        public override string Name => "TEXT";
-        public override SkcShape Create() => new SkcTextShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "TEXT";
+        internal override SkcShape Create() => new SkcTextShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -53,7 +52,7 @@ namespace SakraCadHelper.Shape
             }); ;
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -73,22 +72,5 @@ namespace SakraCadHelper.Shape
                 w.WriteString("SRC", Text);
             });
         }
-        //public override void Write(TextWriter w)
-        //{
-        //    w.Write($"PARAM(");
-        //    w.Write($"P0({P0})");
-        //    w.Write($")");
-
-        //    w.Write($"ATTR(");
-        //    WriteLineColor(w, "LC", LineColor);
-        //    WriteLineWidth(w, "LW", LineWidth);
-        //    WriteLineStyle(w, "LS", LineStyle);
-        //    WriteFaceColor(w, "FC", FaceColor);
-        //    TextAttribute.Write(w);
-        //    w.Write($")");
-        //    w.Write($"TEXT(");
-        //    WriteString(w, "SRC", Text);
-        //    w.Write($")");
-        //}
     }
 }

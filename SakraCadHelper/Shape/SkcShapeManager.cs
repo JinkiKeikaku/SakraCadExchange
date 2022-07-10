@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SakraCadHelper.Shape
 {
-    public static class SkcShapeManager
+    internal static class SkcShapeManager
     {
         public static SkcShape? Create(string name)
         {

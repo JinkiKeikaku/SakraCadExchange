@@ -24,10 +24,10 @@ namespace SakraCadHelper.Shape
         public SkcRadiusStyle RadiusStyle = new();
         public SkcFormatStyle FormatStyle = new();
 
-        public override string Name => "RADIUS";
-        public override SkcShape Create() => new SkcRadiusShape();
+        internal override string Name => "RADIUS";
+        internal override SkcShape Create() => new SkcRadiusShape();
 
-        public override void Read(SkcReader reader)
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -62,7 +62,7 @@ namespace SakraCadHelper.Shape
             }); ;
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -98,7 +98,7 @@ namespace SakraCadHelper.Shape
         public double FontHeight = 3.0;
         public SkcArrowAttribute Arrow = new();
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -110,7 +110,7 @@ namespace SakraCadHelper.Shape
                 { "ARROW",  (reader)=> Arrow.Read(reader)},
            });
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.Write("LINEJUT", LineJut);
             w.Write("TEXTGAP", TextGap);

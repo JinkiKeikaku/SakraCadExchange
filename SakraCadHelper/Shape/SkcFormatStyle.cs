@@ -13,7 +13,7 @@ namespace SakraCadHelper.Shape
         public string Header = "";
         public string Footer = "";
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -23,7 +23,7 @@ namespace SakraCadHelper.Shape
                 { "FOOTER", (reader)=> Footer = reader.ReadString()},
            });
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.Write("ROUND", Round);
             w.Write("FLAG", Flag);

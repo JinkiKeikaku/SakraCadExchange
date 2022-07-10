@@ -15,7 +15,7 @@ namespace SakraCadHelper.Shape
         public double FontWidthScale;    ////ﾌｫﾝﾄの幅の比(デフォルトの幅に対する比：0の場合、デフォルト=1.0と同じ)
         public int Flag;
 
-        public bool Read(SkcReader reader, string tag)
+        internal bool Read(SkcReader reader, string tag)
         {
             var f = true;
             switch (tag)
@@ -45,7 +45,7 @@ namespace SakraCadHelper.Shape
             return f;
         }
 
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -59,15 +59,6 @@ namespace SakraCadHelper.Shape
                     w.Write("FONTWIDTHSCALE", FontWidthScale, 0.0);
                 }
             });
-            //w.Write($"TC({Color})");
-            //if (Angle != 0.0) w.Write($"TA({Angle})");
-            //if (Flag != 0) w.Write($"TS({Flag})");
-            //SkcShape.WriteString(w, "FONTNAME", FontName);
-            //w.Write($"FONTHEIGHT({FontHeight})");
-            //if (FontWidthScale != 0.0 && FontWidthScale != 1.0)
-            //{
-            //    w.Write($"FONTWIDTHSCALE({FontWidthScale})");
-            //}
         }
     }
 }

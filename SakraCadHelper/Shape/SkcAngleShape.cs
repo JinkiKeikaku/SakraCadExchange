@@ -27,10 +27,10 @@ namespace SakraCadHelper.Shape
         public SkcAngleStyle AngleStyle = new();
         public SkcFormatStyle FormatStyle = new();
 
-        public override string Name => "ANGLE";
-        public override SkcShape Create() => new SkcAngleShape();
+        internal override string Name => "ANGLE";
+        internal override SkcShape Create() => new SkcAngleShape();
 
-        public override void Read(SkcReader reader)
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -68,7 +68,7 @@ namespace SakraCadHelper.Shape
             }); ;
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -114,7 +114,7 @@ namespace SakraCadHelper.Shape
         public SkcArrowAttribute StartArrow = new();
         public SkcArrowAttribute EndArrow = new();
 
-        public void Read(SkcReader reader)
+        internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -128,7 +128,7 @@ namespace SakraCadHelper.Shape
                 { "EA",  (reader)=> EndArrow.Read(reader)},
            });
         }
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.Write("LINEGAP", LineGap);
             w.Write("LINEJUT", LineJut);

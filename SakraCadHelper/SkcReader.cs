@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SakraCadHelper
 {
-    public class SkcReader
+    internal class SkcReader
     {
         SkcTokenizer mTokenizer = null!;
 

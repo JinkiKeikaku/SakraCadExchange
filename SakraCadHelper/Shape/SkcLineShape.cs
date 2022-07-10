@@ -17,10 +17,10 @@ namespace SakraCadHelper.Shape
         public SkcArrowAttribute StartArrow = new ();
         public SkcArrowAttribute EndArrow = new ();
 
-        public override string Name => "LINE";
-        public override SkcShape Create() => new SkcLineShape();
+        internal override string Name => "LINE";
+        internal override SkcShape Create() => new SkcLineShape();
 
-        public override void Read(SkcReader reader)
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -44,7 +44,7 @@ namespace SakraCadHelper.Shape
             });
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {

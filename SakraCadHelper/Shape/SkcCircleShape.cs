@@ -18,10 +18,9 @@ namespace SakraCadHelper.Shape
         public int LineStyle = 0;
         public SkcFaceColor? FaceColor = null;
 
-        public override string Name => "CIRCLE";
-        public override SkcShape Create() => new SkcCircleShape();
-
-        public override void Read(SkcReader reader)
+        internal override string Name => "CIRCLE";
+        internal override SkcShape Create() => new SkcCircleShape();
+        internal override void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
@@ -46,7 +45,7 @@ namespace SakraCadHelper.Shape
             });
         }
 
-        public override void Write(SkcWriter w)
+        internal override void Write(SkcWriter w)
         {
             w.WriteObject("PARAM", false, w =>
             {
@@ -62,17 +61,6 @@ namespace SakraCadHelper.Shape
                 WriteLineStyle(w, "LS", LineStyle);
                 WriteFaceColor(w, "FC", FaceColor);
             });
-
-            //w.Write($"PARAM(P0({P0})RADIUS({Radius})");
-            //if (Flat != 1.0) w.Write($"FLAT({Flat})");
-            //if (Angle != 0.0) w.Write($"ANGLE({Angle})");
-            //w.Write($")");
-            //w.Write($"ATTR(");
-            //WriteLineColor(w, "LC", LineColor);
-            //WriteLineWidth(w, "LW", LineWidth);
-            //WriteLineStyle(w, "LS", LineStyle);
-            //WriteFaceColor(w, "FC", FaceColor);
-            //w.Write($")");
         }
     }
 }

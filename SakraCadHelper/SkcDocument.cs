@@ -47,22 +47,19 @@ namespace SakraCadHelper
         {
             writer.WriteLine("$$SakraCadText$$", Encoding.GetEncoding("shift_jis"));
             var w = new SkcWriter(writer);
-            w.Write<SkcFileInfo>("FILEINFO", FileInfo, true);
-            w.Write<SkcPaper>("PAPER", SkcPaper, true);
+            w.Write("FILEINFO", FileInfo, true);
+            w.Write("PAPER", SkcPaper, true);
             w.WriteObject("LASTUSED", false, w =>
             {
-                w.Write<int>("PAGEINDEX", LastUsedPage);
+                w.Write("PAGEINDEX", LastUsedPage);
             }, true);
 
-            w.WriteObjects<SkcPage>("PAGES", Pages, (w, page) =>
+            w.WriteObjects("PAGES", Pages, (w, page) =>
             {
                 w.WriteObject("PAGE", true, w =>
                 {
                     page.Write(w);
                 }, false);
-                //writer.Write($"PAGE(");
-                //page.Writer(writer);
-                //writer.WriteLine($")");
             }, true);
         }
 

@@ -34,11 +34,11 @@ namespace SakraCadHelper
             LayerShapes[layerName].AddRange(shapes);
         }
 
-        public void Write(SkcWriter w)
+        internal void Write(SkcWriter w)
         {
             w.WriteString("NAME", Name);
-            w.Write<int>("FLAG", Flag);
-            w.Write<SkcPaperScale>("PAPERSCALE", PaperScale, true);
+            w.Write("FLAG", Flag);
+            w.Write("PAPERSCALE", PaperScale, true);
             w.WriteObjects("LAYERS", LayerShapes, (w, ls) =>
             {
                 w.WriteObject("LAYER", true, w =>
@@ -46,27 +46,8 @@ namespace SakraCadHelper
                     w.WriteString("NAME", ls.Key, true);
                     w.NewLine();
                     SkcShapeManager.WriteShapes(w, "SHAPES", ls.Value);
-                    //w.WriteObjects("SHAPES", ls.Value, (w, s) =>
-                    //{
-                    //    SkcShapeManager.WriteShape(w, s);
-                    //}, true);
                 }, false);
             }, true);
-//            w.WriteLine($"NAME(\"{Name}\")FLAG({Flag})");
-//            w.WriteLine($"PAPERSCALE({PaperScale})");
-            //w.WriteLine($"LAYERS(");
-            //foreach (var ls in LayerShapes)
-            //{
-            //    w.WriteLine($"LAYER(NAME(\"{ls.Key}\")");
-            //    w.WriteLine($"SHAPES(");
-            //    foreach(var s in ls.Value)
-            //    {
-            //        SkcShapeManager.WriteShape(w, s);
-            //    }
-            //    w.WriteLine($")");
-            //    w.WriteLine($")");
-            //}
-            //w.WriteLine($")");
         }
     }
 }
