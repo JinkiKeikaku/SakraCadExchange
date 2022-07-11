@@ -10,9 +10,9 @@ namespace SakraCadHelper
     public class SkcDocument
     {
         public SkcFileInfo FileInfo { get; } = new();
-        public SkcPaper SkcPaper { get; } = new();
+        public SkcPaper PaperInfo { get; } = new();
         public bool Horz = true;
-        public int LastUsedPage = 1;
+        public int LastUsedPage = 0;
 
         public SkcDocument()
         {
@@ -26,9 +26,45 @@ namespace SakraCadHelper
         /// </summary>
         public static bool IsSkcFile(string path)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             using var r = new StreamReader(path, Encoding.GetEncoding("shift_jis"));
             var line = r.ReadLine();
             return line == "$$SakraCadText$$";
+        }
+
+        public static int GetPageCount(string path)
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using var r = new StreamReader(path, Encoding.GetEncoding("shift_jis"));
+            var line = r.ReadLine();
+            if (line != "$$SakraCadText$$") throw new Exception("Not SakraCad format");
+            var reader = new SkcReader(r);
+            int pageSize = 0;
+            reader.ReadTags(new()
+            {
+                {"PAGES", reader =>{
+                    reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
+                    {
+                        { "PAGE", (reader)=> {reader.SkipTag(); pageSize++; } },
+                    });
+                } }
+            });
+            return pageSize;
+        }
+
+        public void ReadSinglePage(string path, int pageIndex)
+        {
+            using var r = new StreamReader(path, Encoding.GetEncoding("shift_jis"));
+            var line = r.ReadLine();
+            if (line != "$$SakraCadText$$") throw new Exception("Not SakraCad format");
+            var reader = new SkcReader(r);
+
+            reader.ReadTag("FILEINFO", reader => FileInfo.Read(reader));
+            reader.ReadTag("PAPER", reader => PaperInfo.Read(reader));
+            reader.ReadTag("LASTUSED", ReadLastUsedSection);
+            reader.ReadTag("PAGES", reader => { 
+                ReadPagesSection(reader, pageIndex);
+            });
         }
 
         public void Read(string path)
@@ -37,8 +73,8 @@ namespace SakraCadHelper
             var line = r.ReadLine();
             if (line != "$$SakraCadText$$") throw new Exception("Not SakraCad format");
             var reader = new SkcReader(r);
-            reader.ReadTag("FILEINFO", ReadFileInfoSection);
-            reader.ReadTag("PAPER", ReadPaperSection);
+            reader.ReadTag("FILEINFO", reader => FileInfo.Read(reader));
+            reader.ReadTag("PAPER", reader => PaperInfo.Read(reader));
             reader.ReadTag("LASTUSED", ReadLastUsedSection);
             reader.ReadTag("PAGES", ReadPagesSection);
         }
@@ -47,8 +83,8 @@ namespace SakraCadHelper
         {
             writer.WriteLine("$$SakraCadText$$", Encoding.GetEncoding("shift_jis"));
             var w = new SkcWriter(writer);
-            w.Write("FILEINFO", FileInfo, true);
-            w.Write("PAPER", SkcPaper, true);
+            w.WriteObject("FILEINFO", false, w => FileInfo.Write(w), true);
+            w.WriteObject("PAPER", false, w => PaperInfo.Write(w), true);
             w.WriteObject("LASTUSED", false, w =>
             {
                 w.Write("PAGEINDEX", LastUsedPage);
@@ -56,37 +92,8 @@ namespace SakraCadHelper
 
             w.WriteObjects("PAGES", Pages, (w, page) =>
             {
-                w.WriteObject("PAGE", true, w =>
-                {
-                    page.Write(w);
-                }, false);
+                w.WriteObject("PAGE", true, w => page.Write(w), false);
             }, true);
-        }
-
-        void ReadFileInfoSection(SkcReader reader)
-        {
-            reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
-            {
-                { "ENCODING", (reader)=>FileInfo.EncodingName = reader.ReadString() },
-                { "GENERATOR", (reader)=>FileInfo.GeneratorName = reader.ReadString() },
-                { "SKCVERSION", (reader)=>FileInfo.SkcVersion = reader.ReadString() },
-            });
-        }
-
-        void ReadPaperSection(SkcReader reader)
-        {
-            reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
-            {
-                { "PAPERSIZE", (reader)=>{
-                    reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
-                    {
-                        { "NAME", (reader)=> SkcPaper.Name = reader.ReadString() },
-                        { "WIDTH", (reader)=> SkcPaper.Width = reader.ReadDouble() },
-                        { "HEIGHT", (reader)=> SkcPaper.Height = reader.ReadDouble() },
-                    });
-                }},
-                { "HORZ", (reader)=> SkcPaper.Horz = reader.ReadInt() != 0 },
-            });
         }
 
         void ReadLastUsedSection(SkcReader reader)
@@ -105,10 +112,28 @@ namespace SakraCadHelper
             });
         }
 
+        void ReadPagesSection(SkcReader reader, int pageIndex)
+        {
+            var index = 0;
+            LastUsedPage = 0;
+            reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
+            {
+                { "PAGE", (reader)=> {
+                   if(index == pageIndex) {
+                        ReadPage(reader);
+                    }
+                    else
+                    {
+                        reader.SkipTag();
+                    }
+                   index++;
+                } },
+            });
+        }
+
         void ReadPage(SkcReader reader)
         {
             var page = new SkcPage();
-
             reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
             {
                 { "NAME", (reader)=> page.Name = reader.ReadString() },

@@ -23,6 +23,7 @@ namespace SakraCadExchange
             {
                 if (Path.GetExtension(path) == ".skc")
                 {
+//                    var ps = SakraCadHelper.SkcDocument.GetPageCount(path);
                     var doc = new SakraCadHelper.SkcDocument();
                     doc.Read(path);
                     WriteToTextBox(doc);

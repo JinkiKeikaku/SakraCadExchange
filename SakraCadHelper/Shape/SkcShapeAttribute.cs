@@ -94,6 +94,13 @@ namespace SakraCadHelper.Shape
                 { "SIZE", (reader)=> Size = reader.ReadDouble()},
             });
         }
+        internal void Write(SkcWriter writer)
+        {
+            writer.Write("ID", ID);
+            writer.Write("SIZE", Size);
+        }
+
+
         public override string ToString() => $"ID({ID})SIZE({Size})";
     }
 }

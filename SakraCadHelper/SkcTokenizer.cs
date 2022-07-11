@@ -152,14 +152,11 @@ namespace SakraCadHelper
             while (true)
             {
                 var c = GetChar();
-                if (c >= 0)
-                {
                     if (c < 0 || !Char.IsWhiteSpace((char)c))
                     {
                         PushChar(c);
                         break;
                     }
-                }
             }
         }
 

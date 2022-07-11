@@ -61,9 +61,10 @@ namespace SakraCadHelper.Shape
         {
             if (arrow.ID != 0)
             {
-                w.Write(tag, arrow);
-            }
+                w.WriteObject(tag, false, w => arrow.Write(w));
+            //                w.Write(tag, arrow);
         }
+    }
 
         internal static void WriteLineColor(SkcWriter w, string tag, int color)
         {
