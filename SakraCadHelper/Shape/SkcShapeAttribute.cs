@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace SakraCadHelper.Shape
 {
+
+    public static class SkcColor
+    {
+        public const int NullColor = 0x01000000;
+        public const int HojoColor = 0x02000000;
+    }
+
     public abstract class SkcFaceColor
     {
     }
@@ -75,17 +82,24 @@ namespace SakraCadHelper.Shape
 
     public class SkcArrowAttribute
     {
-        const int ARROWSTYLE_NONE = 0;
-        const int ARROWSTYLE_ARROW = 1;
-        const int ARROWSTYLE_TRIANGLE = 2;
-        const int ARROWSTYLE_SLASH = 3;
-        const int ARROWSTYLE_RING = 4;
-        const int ARROWSTYLE_DOT = 5;
-        const int ARROWSTYLE_UNFILLEDTRIANGLE = 6;
-        const int ARROWSTYLE_UNFILLEDBOX = 7;
+        public const int ARROWSTYLE_NONE = 0;
+        public const int ARROWSTYLE_ARROW = 1;
+        public const int ARROWSTYLE_TRIANGLE = 2;
+        public const int ARROWSTYLE_SLASH = 3;
+        public const int ARROWSTYLE_RING = 4;
+        public const int ARROWSTYLE_DOT = 5;
+        public const int ARROWSTYLE_UNFILLEDTRIANGLE = 6;
+        public const int ARROWSTYLE_UNFILLEDBOX = 7;
 
         public int ID = ARROWSTYLE_NONE;
         public double Size = 0.0;
+
+        public SkcArrowAttribute(int iD = ARROWSTYLE_NONE, double size = 3.0)
+        {
+            ID = iD;
+            Size = size;
+        }
+
         internal void Read(SkcReader reader)
         {
             reader.ReadTags(new ()

@@ -29,7 +29,6 @@ namespace SakraCadHelper
             writer.WriteString("SKCVERSION", SkcVersion);
         }
 
-
         public override string ToString()
         {
             return $"ENCODING(\"{EncodingName}\")GENERATOR(\"{GeneratorName}\")SKCVERSION(\"{SkcVersion}\")";

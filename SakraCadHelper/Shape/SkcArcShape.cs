@@ -8,13 +8,21 @@ namespace SakraCadHelper.Shape
 {
     public class SkcArcShape : SkcShape
     {
+        [Flags]
+        public enum ArcFlag
+        {
+            None = 0,
+            Fan = 1,
+
+        }
+
         public SkcPoint P0 = new();
         public double Radius = 0.0;
         public double Flat = 1.0;
         public double Angle = 0.0;
         public double Start = 0.0;
         public double End = 360.0;
-        public int Flag = 0;
+        public ArcFlag Flag = 0;
 
         public int LineColor = 0;
         public double LineWidth = 0.0;
@@ -38,7 +46,7 @@ namespace SakraCadHelper.Shape
                         { "ANGLE", (reader)=> Angle = reader.ReadDouble()},
                         { "START", (reader)=> Start = reader.ReadDouble()},
                         { "END", (reader)=> End = reader.ReadDouble()},
-                        { "FLAG", (reader)=> Flag = reader.ReadInt()},
+                        { "FLAG", (reader)=> Flag = (ArcFlag)reader.ReadInt()},
                     })
                 },
                 { "ATTR", (reader)=>
@@ -63,7 +71,7 @@ namespace SakraCadHelper.Shape
                 w.Write("RADIUS", Radius);
                 w.Write("FLAT", Flat, 1.0);
                 w.Write("ANGLE", Angle, 0.0);
-                w.Write("FLAG", Flag, 0);
+                w.Write("FLAG", (int)Flag, 0);
                 w.Write("START", Start);
                 w.Write("END", End);
             });

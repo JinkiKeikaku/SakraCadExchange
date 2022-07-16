@@ -26,7 +26,7 @@ namespace SakraCadHelper.Shape
                 { "PARAM", (reader)=>
                     reader.ReadTags(new()
                     {
-                        { "P0", (reader)=> reader.ReadPoint()},
+                        { "P0", (reader)=> P0 = reader.ReadPoint()},
                         { "ANGLE", (reader)=> Angle = reader.ReadDouble()},
                     })
                 },
@@ -61,29 +61,39 @@ namespace SakraCadHelper.Shape
 
     public class SkcMarkStyle
     {
-        const int MARKERCODE_DOT = 0;
-        const int CC_MARKERCODE_X = 1;
-        const int CC_MARKERCODE_PLUS = 2;
-        const int MARKERCODE_CIRCLE = 3;
-        const int MARKERCODE_RECT = 4;
-        const int MARKERCODE_TRIANGLE = 5;
-        const int MARKERCODE_ASTERISK = 6;
+        public enum MarkerCode
+        {
+            Dot=0,
+            X=1,
+            Plus=2,
+            Circle=3,
+            Rect = 4,
+            Triangle=5,
+            Asterisk=6,
+        }
+        //public const int MARKERCODE_DOT = 0;
+        //public const int MARKERCODE_X = 1;
+        //public const int MARKERCODE_PLUS = 2;
+        //public const int MARKERCODE_CIRCLE = 3;
+        //public const int MARKERCODE_RECT = 4;
+        //public const int MARKERCODE_TRIANGLE = 5;
+        //public const int MARKERCODE_ASTERISK = 6;
 
 
-        public int Code = 0;
+        public MarkerCode Code = 0;
         public double Radius = 1.0;
 
         internal void Read(SkcReader reader)
         {
             reader.ReadTags(new()
             {
-                { "CODE", (reader)=> Code = reader.ReadInt()},
+                { "CODE", (reader)=> Code = (MarkerCode)reader.ReadInt()},
                 { "RADIUS", (reader)=> Radius = reader.ReadDouble()},
            });
         }
         internal void Write(SkcWriter w)
         {
-            w.Write("CODE", Code, 0);
+            w.Write("CODE", (int)Code, 0);
             w.Write("RADIUS", Radius, 1.0);
         }
     }

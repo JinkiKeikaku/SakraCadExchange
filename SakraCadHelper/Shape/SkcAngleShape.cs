@@ -8,6 +8,13 @@ namespace SakraCadHelper.Shape
 {
     public class SkcAngleShape : SkcShape
     {
+        [Flags]
+        public enum AngleFlag
+        {
+            None = 0,
+            UseText = 1,
+        }
+
         public SkcPoint P0 = new();
         public double Radius;
         public double StartAngle = 0.0;
@@ -15,7 +22,7 @@ namespace SakraCadHelper.Shape
         public double Leg0 = 0;
         public double Leg1 = 0;
         public double TextPos = 0.5;
-        public int Flag = 0;
+        public AngleFlag Flag = 0;
         public string Text = "";
 
         public int LineColor = 0;
@@ -44,7 +51,7 @@ namespace SakraCadHelper.Shape
                         { "LEG0", (reader)=> Leg0 = reader.ReadDouble()},
                         { "LEG1", (reader)=> Leg1 = reader.ReadDouble()},
                         { "TEXTPOS", (reader)=> TextPos = reader.ReadDouble()},
-                        { "FLAG", (reader)=> Flag = reader.ReadInt()},
+                        { "FLAG", (reader)=> Flag = (AngleFlag)reader.ReadInt()},
                     })
                 },
                 { "ATTR", (reader)=>
@@ -79,7 +86,7 @@ namespace SakraCadHelper.Shape
                 w.Write("LEG0", Leg0);
                 w.Write("LEG1", Leg1);
                 w.Write("TEXTPOS", TextPos, 0.5);
-                w.Write("FLAG", Flag, 0);
+                w.Write("FLAG", (int)Flag, 0);
             });
             w.WriteObject("ATTR", false, w =>
             {

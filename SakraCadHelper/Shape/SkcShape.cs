@@ -8,6 +8,7 @@ namespace SakraCadHelper.Shape
 {
     public abstract class SkcShape
     {
+
         internal abstract string Name { get; }
         internal abstract SkcShape Create();
         internal abstract void Read(SkcReader reader);

@@ -49,6 +49,7 @@ namespace SakraCadHelper.Shape
     }
     public class SkcDib
     {
+        public byte[]? FileHeader;
         public byte[]? Header;
         public byte[]? Image;
 
@@ -57,10 +58,52 @@ namespace SakraCadHelper.Shape
 
         }
 
+        /// <summary>
+        /// dibをinfoheaderとimageから作ります。
+        /// </summary>
         public SkcDib(byte[] header, byte[] image)
         {
             Header = header;
             Image = image;
+            CalcBitmapFuileHeader();
+        }
+
+        /// <summary>
+        /// dib(fileheader+infoheader+image)を渡します
+        /// </summary>
+        public SkcDib(byte[] dib)
+        {
+            FileHeader = dib[0..14];
+            var a = dib[14] + (((int)dib[15]) << 8) + (((int)dib[16]) << 16) + (((int)dib[17]) << 24) + 14;
+            Header = dib[14..a];
+            Image = dib[a..];
+        }
+
+
+        void CalcBitmapFuileHeader()
+        {
+            if (Header == null) return;
+            var ms = new MemoryStream();
+            ms.WriteByte(0x42);//B
+            ms.WriteByte(0x4d);//M
+            var size = Header.Length + Image.Length + 14;
+            byte[] buf = new byte[4];
+            buf[0] = (byte)(size & 255);
+            buf[1] = (byte)((size >> 8) & 255);
+            buf[2] = (byte)((size >> 16) & 255);
+            buf[3] = (byte)((size >> 24) & 255);
+            ms.Write(buf, 0, 4);
+            ms.WriteByte(0);
+            ms.WriteByte(0);
+            ms.WriteByte(0);
+            ms.WriteByte(0);
+            size = 14 + Header.Length;
+            buf[0] = (byte)(size & 255);
+            buf[1] = (byte)((size >> 8) & 255);
+            buf[2] = (byte)((size >> 16) & 255);
+            buf[3] = (byte)((size >> 24) & 255);
+            ms.Write(buf, 0, 4);
+            FileHeader = ms.ToArray();
         }
 
         internal void Read(SkcReader reader)
@@ -70,6 +113,7 @@ namespace SakraCadHelper.Shape
                 { "HEADER", (reader)=> Header = reader.ReadBytes() },
                 { "IMAGE", (reader)=> Image = reader.ReadCompressBytes() },
             }); ;
+            CalcBitmapFuileHeader();
         }
         internal void Write(SkcWriter w)
         {

@@ -9,8 +9,8 @@ namespace SakraCadHelper
 {
     public class SkcSheet
     {
-        const int SHEET_SHOW = 256;	    //	見えるか
-        const int SHEET_PRINT = 512;	//  印刷できるか
+        public const int SHEET_SHOW = 256;	    //	見えるか
+        public const int SHEET_PRINT = 512;	//  印刷できるか
 
         public string Name = "";
         public int Flag = SHEET_SHOW | SHEET_PRINT;

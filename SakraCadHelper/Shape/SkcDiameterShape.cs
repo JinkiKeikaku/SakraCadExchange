@@ -8,11 +8,18 @@ namespace SakraCadHelper.Shape
 {
     public class SkcDiameterShape : SkcShape
     {
+        [Flags]
+        public enum DiameterFlag
+        {
+            None = 0,
+            UseText = 1,
+        }
+
         public SkcPoint P0 = new();
         public double Radius;
         public double Angle = 0.0;
         public double TextPos = 0.5;
-        public int Flag = 0;
+        public DiameterFlag Flag = 0;
         public string Text = "";
 
         public int LineColor = 0;
@@ -37,7 +44,7 @@ namespace SakraCadHelper.Shape
                         { "RADIUS", (reader)=> Radius = reader.ReadDouble()},
                         { "ANGLE", (reader)=> Angle = reader.ReadDouble()},
                         { "TEXTPOS", (reader)=> TextPos = reader.ReadDouble()},
-                        { "FLAG", (reader)=> Flag = reader.ReadInt()},
+                        { "FLAG", (reader)=> Flag = (DiameterFlag)reader.ReadInt()},
                     })
                 },
                 { "ATTR", (reader)=>
@@ -69,7 +76,7 @@ namespace SakraCadHelper.Shape
                 w.Write("RADIUS", Radius);
                 w.Write("ANGLE", Angle, 0.0);
                 w.Write("TEXTPOS", TextPos, 0.5);
-                w.Write("FLAG", Flag, 0);
+                w.Write("FLAG", (int)Flag, 0);
             });
             w.WriteObject("ATTR", false, w =>
             {

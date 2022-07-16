@@ -9,20 +9,22 @@ namespace SakraCadHelper
 {
     public class SkcDocument
     {
-        public SkcFileInfo FileInfo { get; } = new();
-        public SkcPaper PaperInfo { get; } = new();
-        public bool Horz = true;
-        public int LastUsedPage = 0;
-
         public SkcDocument()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
+        public SkcFileInfo FileInfo { get; } = new();
+        public SkcPaper PaperInfo { get; } = new();
+        public bool Horz { get; set; } = true;
+        public int LastUsedPage { get; set; } = 0;
+        /// <summary>
+        /// ページオブジェクトのリスト
+        /// </summary>
         public List<SkcPage> Pages { get; } = new();
 
         /// <summary>
-        /// SKCファイルか調べます。
+        /// SKCファイルか調べます。ファイル先頭のヘッダ一行で判断します。
         /// </summary>
         public static bool IsSkcFile(string path)
         {
@@ -32,6 +34,9 @@ namespace SakraCadHelper
             return line == "$$SakraCadText$$";
         }
 
+        /// <summary>
+        /// ページ数を返す。ファイル全体を読むのでそれなりに遅いので注意。
+        /// </summary>
         public static int GetPageCount(string path)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -52,21 +57,29 @@ namespace SakraCadHelper
             return pageSize;
         }
 
-        public void ReadSinglePage(string path, int pageIndex)
+        /// <summary>
+        /// 0から始まる[pageIndex]で指定するページを読み込みます。
+        /// 指定したページが読み込めた場合はtrueを返します。
+        /// </summary>
+        public bool ReadSinglePage(string path, int pageIndex)
         {
             using var r = new StreamReader(path, Encoding.GetEncoding("shift_jis"));
             var line = r.ReadLine();
             if (line != "$$SakraCadText$$") throw new Exception("Not SakraCad format");
             var reader = new SkcReader(r);
-
+            var f = false;
             reader.ReadTag("FILEINFO", reader => FileInfo.Read(reader));
             reader.ReadTag("PAPER", reader => PaperInfo.Read(reader));
             reader.ReadTag("LASTUSED", ReadLastUsedSection);
             reader.ReadTag("PAGES", reader => { 
-                ReadPagesSection(reader, pageIndex);
+                f = ReadPagesSection(reader, pageIndex);
             });
+            return f;
         }
 
+        /// <summary>
+        /// 全てのページを読み込みます。
+        /// </summary>
         public void Read(string path)
         {
             using var r = new StreamReader(path, Encoding.GetEncoding("shift_jis"));
@@ -79,9 +92,15 @@ namespace SakraCadHelper
             reader.ReadTag("PAGES", ReadPagesSection);
         }
 
+        public void Write(string path)
+        {
+            using var w = new StreamWriter(path, false, Encoding.GetEncoding("shift_jis"));
+            Write(w);
+        }
+
         public void Write(TextWriter writer)
         {
-            writer.WriteLine("$$SakraCadText$$", Encoding.GetEncoding("shift_jis"));
+            writer.WriteLine("$$SakraCadText$$");
             var w = new SkcWriter(writer);
             w.WriteObject("FILEINFO", false, w => FileInfo.Write(w), true);
             w.WriteObject("PAPER", false, w => PaperInfo.Write(w), true);
@@ -112,15 +131,17 @@ namespace SakraCadHelper
             });
         }
 
-        void ReadPagesSection(SkcReader reader, int pageIndex)
+        bool ReadPagesSection(SkcReader reader, int pageIndex)
         {
             var index = 0;
             LastUsedPage = 0;
+            var f = false;
             reader.ReadTags(new Dictionary<string, Action<SkcReader>>()
             {
                 { "PAGE", (reader)=> {
                    if(index == pageIndex) {
                         ReadPage(reader);
+                        f = true;
                     }
                     else
                     {
@@ -129,6 +150,7 @@ namespace SakraCadHelper
                    index++;
                 } },
             });
+            return f;
         }
 
         void ReadPage(SkcReader reader)

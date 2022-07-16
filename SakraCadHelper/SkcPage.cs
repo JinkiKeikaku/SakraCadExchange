@@ -8,8 +8,8 @@ namespace SakraCadHelper
 {
     public class SkcPage
     {
-        const int PAGE_SHOW = 1;	//		見えるか
-        const int PAGE_PRINT = 2;	//		印刷できるか
+        public const int PAGE_SHOW = 1;	//		見えるか
+        public const int PAGE_PRINT = 2;	//		印刷できるか
 
         public string Name = "page";
         public int Flag = PAGE_SHOW | PAGE_PRINT;

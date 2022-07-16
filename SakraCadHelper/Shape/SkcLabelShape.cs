@@ -8,18 +8,27 @@ namespace SakraCadHelper.Shape
 {
     public class SkcLabelShape : SkcShape
     {
+        [Flags]
+        public enum LabelFlag
+        {
+            None = 0,
+            AutoLabelPosition=1,
+        }
+
         public List<SkcPoint> Vertex = new();
         public SkcPoint TextPoint = new();
-        public int Flag = 1;
+        public LabelFlag Flag = LabelFlag.AutoLabelPosition;
         public string Text = "";
 
         public int LineColor = 0;
         public double LineWidth = 0.0;
         public int LineStyle = 0;
         public SkcFaceColor? FaceColor = null;
+
         public int TextColor = 0;
         public int TextStyle = 0;
         public double TextAngle = 0.0;
+
         public SkcLabelStyle LabelStyle = new();
 
         internal override string Name => "LABEL";
@@ -33,7 +42,7 @@ namespace SakraCadHelper.Shape
                     {
                         { "VERTEX", (reader)=> ReadVertex(reader, Vertex)},
                         { "TEXTPOINT", (reader)=> TextPoint = reader.ReadPoint()},
-                        { "FLAG", (reader)=> Flag = reader.ReadInt()},
+                        { "FLAG", (reader)=> Flag = (LabelFlag)reader.ReadInt()},
                     })
                 },
                 { "ATTR", (reader)=>
@@ -62,8 +71,11 @@ namespace SakraCadHelper.Shape
             w.WriteObject("PARAM", false, w =>
             {
                 WriteVertex(w, "VERTEX", Vertex);
-                w.Write("TEXTPOINT", TextPoint);
-                w.Write("FLAG", Flag, 0);
+                if(Flag == 0)
+                {
+                    w.Write("TEXTPOINT", TextPoint);
+                }
+                w.Write("FLAG", (int)Flag, (int)LabelFlag.AutoLabelPosition);
             });
             w.WriteObject("ATTR", false, w =>
             {

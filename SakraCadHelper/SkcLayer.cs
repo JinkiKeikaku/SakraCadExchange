@@ -8,9 +8,9 @@ namespace SakraCadHelper
 {
     public class SkcLayer
     {
-        const int LAYER_SHOW = 1;	//		見えるか
-        const int LAYER_PRINT = 2;	//		印刷できるか
-        const int LAYER_SNAP = 4;   //		SNAPできるか
+        public const int LAYER_SHOW = 1;	//		見えるか
+        public const int LAYER_PRINT = 2;	//		印刷できるか
+        public const int LAYER_SNAP = 4;   //		SNAPできるか
 
         public string Name = "";
         public int Flag = LAYER_SHOW | LAYER_PRINT | LAYER_SNAP;
