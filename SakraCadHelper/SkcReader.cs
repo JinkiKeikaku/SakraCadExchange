@@ -225,7 +225,14 @@ namespace SakraCadHelper
             using var bs = new MemoryStream(m);
             using var ds = new ZLibStream(bs, CompressionMode.Decompress);
             var buf = new byte[size];
-            ds.Read(buf, 0, size);
+            var offset = 0;
+            while (offset < buf.Length)
+            {
+                var readSize = ds.Read(buf, offset, buf.Length - offset);
+                if (readSize == 0) break;
+                offset += readSize;
+            }
+//            ds.Read(buf, 0, size);
             ds.Close();
             return buf;
         }
